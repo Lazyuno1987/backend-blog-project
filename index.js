@@ -11,7 +11,7 @@ import validationErrors from "./utils/validationErrors.js";
 import * as dotenv from "dotenv";
 
 dotenv.config();
-const {DATA_BASE}=process.env
+const {DATA_BASE, PORT}=process.env
 
 const app = express();
 const storage = multer.diskStorage({
@@ -52,7 +52,7 @@ app.get('/posts/:id',  getpostById);
 app.delete('/posts/:id', checkAuth, deleteById);
  app.patch("/posts/:id", checkAuth, postValidation, validationErrors, updatePost)
 
-const PORT ='4444'
+
 
 
 app.listen(PORT, (error) => {
