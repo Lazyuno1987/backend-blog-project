@@ -21,12 +21,12 @@ export const getLastTags = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-   
+   console.log("tags",req.body.tags.split(','))
     try {
         const doc = new PostModel({
             title: req.body.title,
             text: req.body.text,
-            tags: req.body.tags.toLowercase().split(','),
+            tags: req.body.tags.split(','),
             imageUrl: req.body.imageUrl,
             user: req.userId,
         })
@@ -35,6 +35,7 @@ export const create = async (req, res) => {
         
         res.json(post)
     } catch (error) {
+        console.log(req.body)
         console.log((error))
         res.status(500).json({
             message:"Article is not created"

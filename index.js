@@ -46,7 +46,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 
 
 app.get('/posts', getAll);
-app.post('/posts', checkAuth, postValidation, create);
+app.post('/posts', checkAuth,  create);
 app.get('/tags', getLastTags)
 app.get('/posts/:id',  getpostById);
 app.delete('/posts/:id', checkAuth, deleteById);
@@ -61,5 +61,5 @@ app.listen(PORT, (error) => {
 
     }
     console.log(`Server is running ${PORT}`)
-    
+
 })
