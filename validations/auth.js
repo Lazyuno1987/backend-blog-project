@@ -22,3 +22,7 @@ export const postValidation=[
 ]
 
 
+export const commentValidation = [
+    body('comment', "Enter comment").isLength({ min: 10 }),
+   
+]

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+    
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -13,6 +14,11 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required:true
+    },
+      userComment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      require: true,
     },
     avatarUrl: String
     

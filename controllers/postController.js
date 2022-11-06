@@ -1,6 +1,6 @@
 import { ReturnDocument } from 'mongodb';
 import PostModel from '../models/Post.js'
-import User from '../models/User.js';
+import UserModel from '../models/User.js';
 
 export const getLastTags = async (req, res) => {
      try {
@@ -21,7 +21,7 @@ export const getLastTags = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-   console.log("tags",req.body.tags.split(','))
+ 
     try {
         const doc = new PostModel({
             title: req.body.title,
@@ -35,7 +35,7 @@ export const create = async (req, res) => {
         
         res.json(post)
     } catch (error) {
-        console.log(req.body)
+        
         console.log((error))
         res.status(500).json({
             message:"Article is not created"
@@ -48,7 +48,12 @@ export const create = async (req, res) => {
 export const getAll = async (req, res) => {
  
     try {
-        const data = await PostModel.find().populate('user').exec();
+       
+        const data = await PostModel.find().populate('comment', {
+            _id: true,
+            comment:true
+    }).populate('user').exec()
+   
     
         res.status(200).json( data)  
     } catch (error) {
@@ -131,9 +136,11 @@ export const updatePost = async (req, res) => {
         }, {
             title: req.body.title,
             text: req.body.text,
-            tags: req.body.tags,
+            tags: req.body.tags.toLowerCase().split(','),
             imageUrl: req.body.imageUrl,
             user: req.userId,
+        
+            
     
             
         })
@@ -142,6 +149,7 @@ export const updatePost = async (req, res) => {
             success:true
         })
     } catch (error) {
+       
       res.status(400).json({
             status: "error",
             message:"Is not updated"

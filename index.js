@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 import multer from "multer";
 
 import cors from 'cors'
-import { registerValidation, loginValidation, postValidation } from './validations/auth.js';
+import { registerValidation, loginValidation, postValidation, commentValidation } from './validations/auth.js';
 import checkAuth from './utils/checkAuth.js';
 import { register, login, currentUser } from './controllers/userController.js';
+import { createComment, getCommentsByPostId, getAllComments } from "./controllers/commentController.js";
 import {create, getAll, getpostById, deleteById, updatePost, getLastTags} from './controllers/postController.js'
 import validationErrors from "./utils/validationErrors.js";
 import * as dotenv from "dotenv";
@@ -50,7 +51,11 @@ app.post('/posts', checkAuth,  create);
 app.get('/tags', getLastTags)
 app.get('/posts/:id',  getpostById);
 app.delete('/posts/:id', checkAuth, deleteById);
- app.patch("/posts/:id", checkAuth, postValidation, validationErrors, updatePost)
+app.patch("/posts/:id", checkAuth,  validationErrors, updatePost)
+app.post("/posts/:id", checkAuth, commentValidation, createComment)
+app.get("/comment/:id", commentValidation, getCommentsByPostId)
+app.get('/comment', commentValidation, getAllComments)
+
 
 
 
