@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from 'mongoose';
 import multer from "multer";
-
+import Jimp from 'jimp'
 import cors from 'cors'
 import { registerValidation, loginValidation, postValidation, commentValidation } from './validations/auth.js';
 import checkAuth from './utils/checkAuth.js';
@@ -10,6 +10,8 @@ import { createComment, getCommentsByPostId, getAllComments } from "./controller
 import {create, getAll, getpostById, deleteById, updatePost, getLastTags} from './controllers/postController.js'
 import validationErrors from "./utils/validationErrors.js";
 import * as dotenv from "dotenv";
+import path from 'path'
+import fs from 'fs/promises'
 
 dotenv.config();
 const {DATA_BASE, PORT}=process.env
@@ -39,10 +41,31 @@ app.post("/auth/register",  registerValidation, validationErrors,  register)
 app.post("/auth/login",  loginValidation, validationErrors, login);
 app.get("/auth/current", checkAuth, currentUser);
 
+
+ import {fileURLToPath} from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
-     res.json({
-        url: `uploads/${req.file.originalname}`
-    })
+  
+    const { path: tempUpload, originalname } = req.file;
+    const imgDir = path.join(__dirname, "uploads");
+   Jimp.read( `${imgDir}/${originalname}`, (err, image) => {
+  if (err) throw err;
+       image
+      
+     .resize(400, Jimp.AUTO)
+  
+    .quality(80) 
+    .write(`${imgDir}/res${originalname}`); 
+        
+           res.json({ url: `uploads/res${originalname}`}) 
+    });
+  
+ 
+
 })
 
 

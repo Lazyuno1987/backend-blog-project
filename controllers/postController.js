@@ -2,6 +2,8 @@ import { ReturnDocument } from 'mongodb';
 import PostModel from '../models/Post.js'
 import UserModel from '../models/User.js';
 
+
+
 export const getLastTags = async (req, res) => {
      try {
         const data = await PostModel.find().limit(10).exec();
@@ -21,8 +23,9 @@ export const getLastTags = async (req, res) => {
 }
 
 export const create = async (req, res) => {
- 
+
     try {
+   
         const doc = new PostModel({
             title: req.body.title,
             text: req.body.text,
@@ -68,15 +71,16 @@ export const getAll = async (req, res) => {
 export const getpostById = async (req, res) => {
     try {
       
-        const  id  = req.params.id
+        const id = req.params.id
+        const rest = await PostModel.findById(id)
+       
         PostModel.findOneAndUpdate(
             { _id: id },
             { $inc: { viewsCount: 1 } },
             { returnDocument: "after" },
             (err, doc) => {
-               
-          
-            if (err) {
+            // console.log(doc)
+                if (err) {
             return  res.status(500).json({
             status: "error",
             message:"Is not resive"
@@ -89,7 +93,7 @@ export const getpostById = async (req, res) => {
                 }
                 
              res.status(200).json(doc)
-        }).populate('user')
+        }).populate('user').populate('comment')
       
     } catch (error) {
            res.status(400).json({
